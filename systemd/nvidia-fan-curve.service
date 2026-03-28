@@ -1,0 +1,18 @@
+[Unit]
+Description=NVIDIA GeForce Fan Curve Controller
+After=graphical.target nvidia-persistenced.service
+Wants=nvidia-persistenced.service
+ConditionPathExists=/etc/nvidia-fan/fanctl.py
+ConditionPathExists=/etc/nvidia-fan/curve.json
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/default/nvidia-fan-curve
+ExecStart=/usr/bin/python3 /etc/nvidia-fan/fanctl.py --gpu ${GPU_INDEX} --display ${DISPLAY_NUM} curve --config /etc/nvidia-fan/curve.json
+Restart=on-failure
+RestartSec=10
+User=root
+NoNewPrivileges=true
+
+[Install]
+WantedBy=graphical.target
